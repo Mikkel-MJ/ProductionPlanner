@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  productionplanner:
+    image: productionplanner
+    build:
+      context: .
+      dockerfile: ./Dockerfile
