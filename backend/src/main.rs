@@ -19,7 +19,7 @@ pub struct AppState {
 async fn main() {
     println!("Starting server..");
     debug_set_env_var(); // only for testing
-    setup_jwks_secrets();
+
     let conn_string = env::var("DATABASE_URL").expect("did not find DATABASE_URL env var");
     println!("connstring: {}", conn_string);
     let db_pool = db::new_db_pool(5, &conn_string).await;
@@ -27,9 +27,9 @@ async fn main() {
     println!("migration completed");
 
     let auth_config = AuthConfig {
-        audience: "prod-plan-api".to_string(),
-        authority: "https://dev-o5vpiij8.eu.auth0.com/".to_string(),
-        jwks: setup_jwks_secrets().await,
+        audience: env::var("AUDIENCE").expect("AUDIENCE needs to be set"),
+        authority: env::var("AUTHORITY").expect("AUTHORITY needs to be set"),
+        jwks: setup_jwks_secrets(env::var("JWKS_URI").expect("JWKS_URI needs to be set")).await,
     };
 
     let state = AppState { db: db_pool };
@@ -45,12 +45,18 @@ async fn main() {
 fn debug_set_env_var() {
     env::set_var(
         "DATABASE_URL",
-        "postgres://postgres:passwordPG@127.0.0.1:5432/ProdPlanDB",
+        "postgres://admin:F5%%&6co&k8$CBEVyQW3ffB4$8D@164.92.203.146:32768/ProdPlanDB",
+    );
+    env::set_var("AUTHORITY", "https://dev-o5vpiij8.eu.auth0.com/");
+    env::set_var("AUDIENCE", "prod-plan-api");
+    env::set_var(
+        "JWKS_URI",
+        "https://dev-o5vpiij8.eu.auth0.com/.well-known/jwks.json",
     )
 }
 
-async fn setup_jwks_secrets() -> jwk::JwkSet {
-    let jwks_string = reqwest::get("https://dev-o5vpiij8.eu.auth0.com/.well-known/jwks.json")
+async fn setup_jwks_secrets(jwk_url: String) -> jwk::JwkSet {
+    let jwks_string = reqwest::get(jwk_url)
         .await
         .expect("failed to get jwks")
         .text()
