@@ -22,17 +22,17 @@ pub async fn create_app(state: AppState, auth: AuthConfig) -> Router {
         )
         .route("/task", get(task_handlers::get_tasks_handler))
         .route("/task/:task_id", get(task_handlers::get_task_by_id_handler))
-        .route(
-            "/template/task",
-            get(task_template_handlers::get_task_templates_handler)
-                .post(task_template_handlers::create_task_template_handler),
-        )
-        .route(
-            "/template/task/:template_id",
-            get(task_template_handlers::get_task_template_by_id_handler)
-                .put(task_template_handlers::update_task_template_by_id_handler)
-                .delete(task_template_handlers::delete_task_template_by_id_handler),
-        )
+        // .route(
+        //     "/template/task",
+        //     get(task_template_handlers::get_task_templates_handler)
+        //         .post(task_template_handlers::create_task_template_handler),
+        // )
+        // .route(
+        //     "/template/task/:template_id",
+        //     get(task_template_handlers::get_task_template_by_id_handler)
+        //         .put(task_template_handlers::update_task_template_by_id_handler)
+        //         .delete(task_template_handlers::delete_task_template_by_id_handler),
+        // )
         .route_layer(middleware::from_fn_with_state(auth, auth::authentication))
         .route("/health", get(system_handlers::health_handler))
         .layer(cors)

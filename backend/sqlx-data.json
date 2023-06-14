@@ -1,49 +1,17 @@
 {
   "db": "PostgreSQL",
-  "043aa9358e07841ac865272a430fa84e95652b99d48b2d27ae1bb26aeabbfbba": {
+  "0971020aec229f0001b3fd49814fe23f20156e59e6a6c3e7c317d8f955d2cef6": {
     "describe": {
       "columns": [],
       "nullable": [],
       "parameters": {
         "Left": [
-          "Int4",
-          "Int8"
+          "Int8Array",
+          "Int8Array"
         ]
       }
     },
-    "query": "DELETE FROM task_templates WHERE tenant_id = $1 AND id = $2"
-  },
-  "0d025f3ff6ece8367cd0b2a8c842ee0c0b837b58da577a005282c9d42e36a9cc": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "tenant_id",
-          "ordinal": 1,
-          "type_info": "Int4"
-        },
-        {
-          "name": "title",
-          "ordinal": 2,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Int4"
-        ]
-      }
-    },
-    "query": "SELECT id,tenant_id,title FROM task_templates WHERE tenant_id =  $1"
+    "query": "INSERT INTO public.order_task_template(order_template_id,task_template_id) SELECT * FROM UNNEST($1::bigint[],$2::bigint[])"
   },
   "103a903a1d536be93d254a7bc2d04f9200ceccdc2715007c6652fe97ab1edce8": {
     "describe": {
@@ -148,39 +116,6 @@
     },
     "query": "INSERT INTO public.orders(tenant_id,title,order_nr,note) VALUES ($1,$2,$3,$4) RETURNING id,tenant_id,order_nr,note,title,status as \"status:_\""
   },
-  "495cbb817e86df2e6e60314cd9779a50737750625f368f492833d67c3a129bcf": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "tenant_id",
-          "ordinal": 1,
-          "type_info": "Int4"
-        },
-        {
-          "name": "title",
-          "ordinal": 2,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Int4",
-          "Varchar"
-        ]
-      }
-    },
-    "query": "INSERT INTO public.task_templates(tenant_id,title) VALUES ($1,$2) RETURNING id,tenant_id,title"
-  },
   "4fd1d30439982066be89ebf8bd5c68c727f1427c1341aa78103420c72f805c54": {
     "describe": {
       "columns": [
@@ -232,6 +167,27 @@
     },
     "query": "SELECT id,order_id,tenant_id,note,title,status as \"status:_\" FROM tasks WHERE tenant_id =  $1 AND id = $2"
   },
+  "68ebb3bc421ffda102c365ca8365cd870d8b42c241fd79bc32bf129ffd6250ca": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int8"
+        }
+      ],
+      "nullable": [
+        false
+      ],
+      "parameters": {
+        "Left": [
+          "Int4",
+          "Varchar"
+        ]
+      }
+    },
+    "query": "INSERT INTO public.order_templates(tenant_id,title) VALUES ($1,$2) RETURNING id"
+  },
   "69f46fd7dfccc29a41d23218dcfef20ab69927bead8381304111388abad203dc": {
     "describe": {
       "columns": [
@@ -282,73 +238,6 @@
       }
     },
     "query": "SELECT id,tenant_id,order_nr,note,title,status as \"status:_\" FROM orders WHERE tenant_id = $1 AND id = $2"
-  },
-  "77b950130f74d977020c3c1e78267d21de7f315fc61a4faae093f215b59cddb6": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "tenant_id",
-          "ordinal": 1,
-          "type_info": "Int4"
-        },
-        {
-          "name": "title",
-          "ordinal": 2,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Varchar",
-          "Int4",
-          "Int8"
-        ]
-      }
-    },
-    "query": "UPDATE task_templates SET title = $1 WHERE tenant_id = $2 AND id = $3 RETURNING id,tenant_id,title"
-  },
-  "9aa00dedc45797e8640329fc100a05e15cf4eeaedf9fb5d5bd4910a5ad58e2e4": {
-    "describe": {
-      "columns": [
-        {
-          "name": "id",
-          "ordinal": 0,
-          "type_info": "Int8"
-        },
-        {
-          "name": "tenant_id",
-          "ordinal": 1,
-          "type_info": "Int4"
-        },
-        {
-          "name": "title",
-          "ordinal": 2,
-          "type_info": "Varchar"
-        }
-      ],
-      "nullable": [
-        false,
-        false,
-        false
-      ],
-      "parameters": {
-        "Left": [
-          "Int4",
-          "Int8"
-        ]
-      }
-    },
-    "query": "SELECT id,tenant_id,title FROM task_templates WHERE tenant_id = $1 AND id = $2"
   },
   "a8f5b26f27304cc74fc39708f2dabf8ca25205530373ea7f6358bcc51fb34053": {
     "describe": {

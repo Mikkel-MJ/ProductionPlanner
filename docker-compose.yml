@@ -11,14 +11,29 @@ services:
       - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  pgAdmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "mikkel1260@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "passwordPG"
+    ports:
+      - "5430:80"
   backend:
     image: backend:0.2
+    build: ./backend
+    depends_on:
+      - db
     ports:
       - 3000:3000
     environment:
-      DATABASE_URL: postgres://postgres:passwordPG@db:5432/ProdPlanDB
+      DATABASE_URL: postgres://postgres:passwordPG@db:5432/postgres
+      AUTHORITY: https://dev-o5vpiij8.eu.auth0.com/
+      AUDIENCE: prod-plan-api
+      JWKS_URI: https://dev-o5vpiij8.eu.auth0.com/.well-known/jwks.json
   frontend:
     image: frontend:0.1
+    build: ./frontend
     ports:
       - 5173:80
 volumes:

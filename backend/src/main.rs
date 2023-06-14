@@ -18,7 +18,7 @@ pub struct AppState {
 #[tokio::main]
 async fn main() {
     println!("Starting server..");
-    debug_set_env_var(); // only for testing
+    // debug_set_env_var(); // only for testing
 
     let conn_string = env::var("DATABASE_URL").expect("did not find DATABASE_URL env var");
     println!("connstring: {}", conn_string);
@@ -45,7 +45,7 @@ async fn main() {
 fn debug_set_env_var() {
     env::set_var(
         "DATABASE_URL",
-        "postgres://admin:F5%%&6co&k8$CBEVyQW3ffB4$8D@164.92.203.146:32768/ProdPlanDB",
+        "postgres://postgres:passwordPG@localhost:5432/postgres",
     );
     env::set_var("AUTHORITY", "https://dev-o5vpiij8.eu.auth0.com/");
     env::set_var("AUDIENCE", "prod-plan-api");
